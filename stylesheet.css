@@ -1299,7 +1299,42 @@ audio {
         color: #fff;
         background-color: #466baf;
     }
+/* Mobile screen adjustments */
+@media only screen and (max-width: 600px) {
 
+    .balloons {
+        width: 12vw;
+        height: 22vw;
+        background-size: 100% 100%;
+    }
+
+    .balloons h2 {
+        font-size: 18px;
+    }
+
+    .message {
+        margin-top: 100px;
+    }
+
+    .message p {
+        font-size: 18px;
+    }
+
+}@media screen and (max-width: 600px) {
+
+    .container {
+        width: 100%;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .balloons {
+        width: 12vw;
+        height: 22vw;
+        background-size: 100% 100%;
+    }
+
+}
 
 
     /*controlling tablet width*/

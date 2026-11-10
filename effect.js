@@ -140,59 +140,98 @@ $('document').ready(function(){
 
 		
 	$('#wish_message').click(function(){
-		 vw = $(window).width()/2;
 
-		$('#b1,#b2,#b3,#b4,#b5,#b6,#b7').stop();
-		$('#b1').attr('id','b11');
-		$('#b2').attr('id','b22')
-		$('#b3').attr('id','b33')
-		$('#b4').attr('id','b44')
-		$('#b5').attr('id','b55')
-		$('#b6').attr('id','b66')
-		$('#b7').attr('id','b77')
-		$('#b11').animate({top:240, left: vw-350},500);
-		$('#b22').animate({top:240, left: vw-250},500);
-		$('#b33').animate({top:240, left: vw-150},500);
-		$('#b44').animate({top:240, left: vw-50},500);
-		$('#b55').animate({top:240, left: vw+50},500);
-		$('#b66').animate({top:240, left: vw+150},500);
-		$('#b77').animate({top:240, left: vw+250},500);
-		$('.balloons').css('opacity','0.9');
-		$('.balloons h2').fadeIn(3000);
-		$(this).fadeOut('slow').delay(3000).promise().done(function(){
-			$('#story').fadeIn('slow');
-		});
-	});
+    var isMobile = window.innerWidth <= 600;
+
+    // Stop old balloon animations
+    $('#b1,#b2,#b3,#b4,#b5,#b6,#b7').stop();
+
+    // Rename balloon IDs
+    $('#b1').attr('id','b11');
+    $('#b2').attr('id','b22');
+    $('#b3').attr('id','b33');
+    $('#b4').attr('id','b44');
+    $('#b5').attr('id','b55');
+    $('#b6').attr('id','b66');
+    $('#b7').attr('id','b77');
+
+    var balloons = [
+        '#b11', '#b22', '#b33', '#b44',
+        '#b55', '#b66', '#b77'
+    ];
+
+    // Calculate balloon positions according to screen size
+    var balloonWidth = isMobile ? Math.min(50, window.innerWidth * 0.12) : 100;
+    var gap = isMobile ? 4 : 10;
+
+    var totalWidth = (7 * balloonWidth) + (6 * gap);
+    var startPosition = (window.innerWidth - totalWidth) / 2;
+
+    balloons.forEach(function(id, index){
+
+        $(id).animate({
+            top: isMobile ? 150 : 240,
+            left: startPosition + index * (balloonWidth + gap)
+        }, 700);
+
+    });
+
+    $('.balloons').css('opacity','0.9');
+
+    $('.balloons h2')
+        .css('font-size', isMobile ? '18px' : '50px')
+        .fadeIn(3000);
+
+    $(this).fadeOut('slow').delay(3000).promise().done(function(){
+        $('#story').fadeIn('slow');
+    });
+
+});
 	
-	$('#story').click(function(){
-		$(this).fadeOut('slow');
-		$('.cake').fadeOut('fast').promise().done(function(){
-			$('.message').fadeIn('slow');
-		});
-		
-		var i;
+$('#story').click(function(){
 
-		function msgLoop (i) {
-			$("p:nth-child("+i+")").fadeOut('slow').delay(800).promise().done(function(){
-			i=i+1;
-			$("p:nth-child("+i+")").fadeIn('slow').delay(1000);
-			if(i==50){
-				$("p:nth-child(49)").fadeOut('slow').promise().done(function () {
-					$('.cake').fadeIn('fast');
-				});
-				
-			}
-			else{
-				msgLoop(i);
-			}			
+    $(this).fadeOut(500);
 
-		});
-			// body...
-		}
-		
-		msgLoop(0);
-		
-	});
+    $('.cake').fadeOut(500, function(){
+
+        $('.message').fadeIn(700, function(){
+
+            var messages = $('.message p');
+            var index = 0;
+
+            messages.hide();
+
+            function msgLoop() {
+
+                if (index >= messages.length) {
+                    $('.cake').fadeIn(700);
+                    return;
+                }
+
+                var current = $(messages[index]);
+
+                current.fadeIn(700);
+
+                // Keep each message visible for 5 seconds
+                setTimeout(function(){
+
+                    current.fadeOut(500, function(){
+
+                        index++;
+                        msgLoop();
+
+                    });
+
+                }, 5000);
+            }
+
+            msgLoop();
+
+        });
+
+    });
+
+});
 });
 
 
